@@ -1,0 +1,146 @@
+rules:
+  - id: dom_xss
+    message: dom_xss
+    metadata:
+      cwe:
+        - "dom_xss"
+      owasp:
+        - A03:2021 - Injection
+      asvs:
+        section: V5 Validation, Sanitization and Encoding
+        control_id: 5.2.4 Dynamic Code Execution Features
+        control_url: https://github.com/OWASP/ASVS/blob/master/4.0/en/0x13-V5-Validation-Sanitization-Encoding.md#v52-sanitization-and-sandboxing
+        version: "4"
+      category: security
+      technology:
+        - browser
+      subcategory:
+        - audit
+      likelihood: LOW
+      impact: MEDIUM
+      confidence: LOW
+      references:
+        - https://owasp.org/Top10/A03_2021-Injection
+      license: Commons Clause License Condition v1.0[LGPL-2.1-only]
+    languages:
+      - javascript
+      - typescript
+    severity: ERROR
+    mode: taint
+    pattern-sources:
+      - patterns:
+          - pattern-inside: |
+              url.split('...')
+      - patterns:
+          - pattern-inside: |
+              getURLParameter('...')
+      - patterns:
+          - pattern-inside: |
+              $PROPS.get('...')
+      - patterns:
+          - pattern-inside: |
+              getUrlParameter('...')
+      - patterns:
+          - pattern-inside: |
+              GetQueryString('...')
+      - patterns:
+          - pattern-inside: |
+              $PROPS.get('...')
+      - patterns:
+          - pattern-inside: |
+              $PROPS.split("...")
+      - patterns:
+          - pattern-either:
+              - pattern-inside: >
+                  $PROP = new URLSearchParams($WINDOW. ...
+                  .location.search).get('...')
+
+                  ...
+              - pattern-inside: |
+                  $PROP = new URLSearchParams(location.search).get('...')
+                  ...
+              - pattern-inside: >
+                  $PROP = new URLSearchParams($WINDOW. ...
+                  .location.hash.substring(1)).get('...')
+
+                  ...
+              - pattern-inside: >
+                  $PROP = new
+                  URLSearchParams(location.hash.substring(1)).get('...')
+
+                  ...     
+              - pattern-inside: |
+                  $PROP = window.location.search.substr(1).match(...)  
+
+                  ...
+          - pattern: $PROP
+      - patterns:
+          - pattern-either:
+              - pattern-inside: |
+                  $PROPS = new URLSearchParams($WINDOW. ... .location.search)
+                  ...
+              - pattern-inside: |
+                  $PROPS = new URLSearchParams(location.search)
+                  ...
+              - pattern-inside: >
+                  $PROPS = new URLSearchParams($WINDOW. ...
+                  .location.hash.substring(1))
+
+                  ...
+              - pattern-inside: |
+                  $PROPS = new URLSearchParams(location.hash.substring(1))
+                  ...
+          - pattern: $PROPS.get('...')
+      - patterns:
+          - pattern-either:
+              - pattern-inside: |
+                  $PROPS = new URL($WINDOW. ... .location.href)
+                  ...
+              - pattern-inside: |
+                  $PROPS = new URL(location.href)
+                  ...
+          - pattern: $PROPS.searchParams.get('...')
+      - patterns:
+          - pattern-either:
+              - pattern-inside: >
+                  $PROPS = new URL($WINDOW. ...
+                  .location.href).searchParams.get('...')
+
+                  ...
+              - pattern-inside: |
+                  $PROPS = new URL(location.href).searchParams.get('...')
+                  ...
+          - pattern: $PROPS
+
+    pattern-sinks:
+      - patterns:
+          - pattern-either:
+              - pattern: $WINDOW. ... .location.href = $SINK
+              - pattern: $WINDOW. ... .location = $SINK
+              - pattern: location.href = $SINK
+              - pattern: $THIS. ... .location.href = $SINK
+              - pattern: $THIS. ... .location.replace($SINK)
+              - pattern: $WINDOW. ... .replace($SINK)
+              - pattern: $PROPS.replace($SINK)
+              - pattern: $X.insertAdjacentHTML($SINK)
+              - pattern: $X.innerHTML($SINK)
+              - pattern: $X.innerHTML = $SINK
+              - pattern: $X.innerHTML += $SINK
+              - pattern: $X.prepend($SINK)
+              - pattern: $X.prepend("..."+$SINK)
+              - pattern: $X.append($SINK)
+              - pattern: $X.append("..."+$SINK)
+              - pattern: $X.before($SINK)
+              - pattern: $X.before("..."+$SINK)
+              - pattern: $X.after($SINK)
+              - pattern: $X.after("..."+$SINK)
+              - pattern: $X.html($SINK)
+              - pattern: $X.html("..."+$SINK)
+              
+          - metavariable-pattern:
+              patterns:
+                - pattern-not: |
+                    "..." + $VALUE
+                - pattern-not: |
+                    `...${$VALUE}`
+              metavariable: $SINK
