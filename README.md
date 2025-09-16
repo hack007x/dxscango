@@ -1,4 +1,4 @@
-# DXScanGo v1.7 - 自动化XSS扫描框架
+# DXScanGo v2.0- 自动化XSS扫描框架 -全新2系列
 
 ## 📋 项目简介
 
@@ -221,6 +221,16 @@ grep "javascript" reports/xss_realtime_*.md
 
 
 📝 更新日志
+
+v2系列
+🔥自行安装semgrep库,pip install --upgrade semgrep（win 其他平台类似）
+🔥安装成功 semgrep --version 输出版本号即为成功
+🔥新增漏洞审计引擎。
+🔥支持自定义编写扫描规则-示例xss.yanl （检测domxss）
+🔥支持默认扫描所有semgrep规则库。
+🔥新增domxss 快速从规则审计扫描, 快速定位核心代码需自主结合上下文分析。
+🛠️修复全局线程批量扫描进程会被kill问题
+🛠️优化爬虫性能分批进行
 
 v1.7
 
