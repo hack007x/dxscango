@@ -111,7 +111,7 @@ js_analysis:
 
 # xss配置
 xss:
-  enable: true                      # 是否启用XSS扫描
+  enable: false                      # 是否启用XSS扫描
   concurrency: 100                  # 扫描并发数
   timeout: 10                       # 单请求超时时间(秒)
   proxy: ""    # HTTP代理地址 (空表示不使用代理)
@@ -161,3 +161,4 @@ xss:
     include_headers: true           # 报告中包含HTTP头信息
     include_raw_request: true       # 包含原始请求
     include_raw_response: false     # 包含原始响应(true=完整响应，false=仅响应头)
+
