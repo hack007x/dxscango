@@ -223,6 +223,7 @@ grep "javascript" reports/xss_realtime_*.md
 📝 更新日志
 
 v2系列
+
 🔥自行安装semgrep库,pip install --upgrade semgrep（win 其他平台类似）
 🔥安装成功 semgrep --version 输出版本号即为成功
 🔥新增漏洞审计引擎。
